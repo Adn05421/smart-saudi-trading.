@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>تداول بذكاء | Smart Saudi Trading AI</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23101B2D'/%3E%3Cpath d='M30 70V48M50 70V34M70 70V22' stroke='%2316A36A' stroke-width='9' stroke-linecap='round'/%3E%3Cpath d='M24 78h52' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#F5F7FA;--card:#fff;--ink:#101B2D;--mut:#6b7788;--line:#e1e6ee;--up:#16A36A;--dn:#E34D59;--nav:#101B2D;--fs:16px}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1322;--card:#141f33;--ink:#eef2f8;--mut:#93a0b5;--line:#243350}}
+:root[data-theme="dark"]{--bg:#0b1322;--card:#141f33;--ink:#eef2f8;--mut:#93a0b5;--line:#243350}
+html{scroll-padding-top:env(safe-area-inset-top,0px);font-size:var(--fs)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Cairo,Inter,system-ui,sans-serif;min-height:100vh;padding-bottom:24px}
+[dir=ltr] body{font-family:Inter,Cairo,system-ui,sans-serif}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--nav);color:#fff;display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px 6px}
+header svg{width:38px;height:38px;flex:none}
+header h1{font-size:1.05rem;margin:0;flex:1;line-height:1.2}
+header small{display:block;font-weight:400;opacity:.7;font-size:.72rem}
+.chip{border:1px solid #ffffff44;background:transparent;color:#fff;border-radius:999px;padding:6px 11px;font:inherit;font-size:.8rem;cursor:pointer}
+main{max-width:760px;margin:0 auto;padding:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+h2{font-size:1.05rem;margin:0 0 10px}
+.mut{color:var(--mut);font-size:.85rem}
+.warn{border-inline-start:4px solid var(--dn)}
+.ok{border-inline-start:4px solid var(--up)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+label{display:block;font-size:.82rem;color:var(--mut);margin-bottom:3px}
+input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+textarea{min-height:90px;direction:ltr}
+button.pri{background:var(--up);color:#fff;border:0;border-radius:12px;padding:12px 16px;font:inherit;font-weight:600;width:100%;margin-top:10px;cursor:pointer}
+button.sec{background:transparent;color:var(--dn);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font:inherit;cursor:pointer}
+.k{font-size:1.25rem;font-weight:800}
+.up{color:var(--up)}.dn{color:var(--dn)}
+.row{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border:0}
+nav{flex:0 0 100%;order:3;display:flex;overflow-x:auto;gap:2px;padding:4px 0 0}
+nav button{flex:1 0 auto;min-width:64px;background:none;border:0;color:#ffffffaa;font:inherit;font-size:.72rem;padding:6px 8px;border-radius:10px;cursor:pointer}
+nav button.on{color:#fff;background:#ffffff1c}
+nav button b{display:block;font-size:1.15rem}
+.pg{display:none}.pg.on{display:block}
+.tag{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.75rem;background:var(--bg);border:1px solid var(--line)}
+.bar{height:8px;border-radius:8px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;background:var(--up)}
+</style>
+</head>
+<body>
+<header>
+<svg viewBox="0 0 100 100" aria-label="أيقونة التطبيق"><rect width="100" height="100" rx="22" fill="#16A36A22" stroke="#16A36A" stroke-width="3"/><path d="M30 70V48M50 70V34M70 70V22" stroke="#16A36A" stroke-width="9" stroke-linecap="round"/><path d="M24 78h52" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
+<h1 id="ttl">تداول بذكاء<small>Smart Saudi Trading AI</small></h1>
+<button class="chip" id="bLang">EN</button><button class="chip" id="bTheme">🌓</button>
+<nav id="nav"></nav>
+</header>
+<main>
+<section class="pg on" id="home">
+<div class="card warn"><h2 data-t="dataSt">حالة البيانات</h2><p class="mut" data-t="noData">لا يوجد مزوّد بيانات سوق متصل. لا تعرض الواجهة أسعارًا أو توصيات مختلقة. بيانات تداول اللحظية تتطلب ترخيصًا من مزوّد معتمد. يمكنك تحليل أي سهم الآن بإدخال أسعاره في صفحة «التحليل».</p></div>
+<div class="card"><h2 data-t="best">أفضل سهم مرشح اليوم</h2><p id="bestBox" class="mut">لا توجد فرصة شراء مناسبة حاليًا.</p></div>
+<div class="card"><h2 data-t="mkt">نظرة على السوق</h2>
+<div class="grid"><div><div class="mut">TASI</div><div class="k">—</div></div><div><div class="mut" data-t="val">قيمة التداول</div><div class="k">—</div></div>
+<div><div class="mut" data-t="adv">الرابحة</div><div class="k up">—</div></div><div><div class="mut" data-t="dec">الخاسرة</div><div class="k dn">—</div></div></div></div>
+<div class="card"><div class="row"><span data-t="opps">فرص شراء محتملة</span><b id="nOpp">0</b></div><div class="row"><span data-t="hist">توصيات مسجّلة</span><b id="nHist">0</b></div></div>
+</section>
+
+<section class="pg" id="analysis">
+<div class="card"><h2 data-t="anT">تحليل سهم من أسعار تدخلها</h2>
+<p class="mut" data-t="anD">الصق أسعار الإغلاق اليومية (من الأقدم للأحدث، 30 سعرًا على الأقل) مفصولة بفواصل أو أسطر. الأحجام اختيارية بنفس الترتيب.</p>
+<label data-t="sym">رمز أو اسم السهم</label><input id="aSym" placeholder="1120 الراجحي">
+<label style="margin-top:8px" data-t="cl">أسعار الإغلاق</label><textarea id="aCl"></textarea>
+<label style="margin-top:8px" data-t="vo">الأحجام (اختياري)</label><textarea id="aVo"></textarea>
+<button class="pri" id="aGo" data-t="run">حلّل السهم</button></div>
+<div id="aOut"></div>
+</section>
+
+<section class="pg" id="calc">
+<div class="card"><h2 data-t="calT">حاسبة الدخول والخروج وإدارة رأس المال</h2>
+<div class="grid">
+<div><label data-t="cap">رأس المال (ر.س)</label><input id="cCap" type="number" inputmode="decimal"></div>
+<div><label data-t="rk">أقصى مخاطرة %</label><input id="cRisk" type="number" inputmode="decimal" value="1"></div>
+<div><label data-t="en">سعر الدخول</label><input id="cEn" type="number" inputmode="decimal"></div>
+<div><label data-t="sl">وقف الخسارة</label><input id="cSl" type="number" inputmode="decimal"></div>
+<div><label data-t="t1">الهدف الأول</label><input id="cT1" type="number" inputmode="decimal"></div>
+<div><label data-t="t2">الهدف الثاني</label><input id="cT2" type="number" inputmode="decimal"></div>
+<div><label data-t="fee">العمولة % لكل عملية</label><input id="cFee" type="number" inputmode="decimal" value="0"></div></div>
+<button class="pri" id="cGo" data-t="calc">احسب</button></div>
+<div id="cOut"></div>
+<p class="mut" data-t="est">كل الحسابات تقديرية، وأسعار التنفيذ الفعلية قد تختلف.</p>
+</section>
+
+<section class="pg" id="port">
+<div class="card"><h2 data-t="pfT">محفظتي الافتراضية</h2>
+<div class="grid">
+<div><label data-t="sym">رمز أو اسم السهم</label><input id="pSym"></div>
+<div><label data-t="qty">الكمية</label><input id="pQty" type="number" inputmode="decimal"></div>
+<div><label data-t="bp">سعر الشراء</label><input id="pBuy" type="number" inputmode="decimal"></div>
+<div><label data-t="cp">السعر الحالي (يدوي)</label><input id="pCur" type="number" inputmode="decimal"></div></div>
+<button class="pri" id="pAdd" data-t="add">أضف إلى المحفظة</button></div>
+<div id="pList"></div>
+</section>
+
+<section class="pg" id="history">
+<div class="card"><h2 data-t="hT">سجل التوصيات</h2><p class="mut" data-t="hD">يُحفظ السجل على جهازك ولا يمكن حذف توصية منه، حتى تبقى النتائج السلبية ظاهرة.</p></div>
+<div id="hList"></div>
+</section>
+
+<section class="pg" id="ai">
+<div class="card"><h2 data-t="aiT">إعدادات مزوّد الذكاء الاصطناعي</h2>
+<p class="mut" data-t="aiD">كل التحليل الفني والحاسبة والمحفظة تعمل بدون مفتاح. المفتاح لتفعيل المساعد الذكي فقط، وبعض المزوّدين يحتسبون رسومًا على الاستخدام.</p>
+<label data-t="prov">المزوّد</label>
+<select id="aiP"><option>OpenAI</option><option>Google Gemini</option><option>DeepSeek</option><option>Anthropic Claude</option><option>Groq</option><option>OpenRouter</option><option>Custom</option></select>
+<label style="margin-top:8px">API Key</label><input id="aiK" type="password" autocomplete="off">
+<label style="margin-top:8px">Base URL</label><input id="aiU" dir="ltr" placeholder="https://...">
+<label style="margin-top:8px">Model</label><input id="aiM" dir="ltr">
+<button class="pri" id="aiS" data-t="save">حفظ</button>
+<button class="sec" id="aiSh" style="margin-top:8px" data-t="show">إظهار/إخفاء المفتاح</button>
+<button class="sec" id="aiD2" style="margin-top:8px" data-t="del">حذف المفتاح</button>
+<p class="mut" id="aiSt"></p>
+<p class="mut" data-t="aiW">يُحفظ المفتاح في متصفحك فقط ولا يُرسل لأي جهة. لا تحفظ مفاتيح مهمة على جهاز مشترك.</p></div>
+</section>
+
+<section class="pg" id="chat">
+<div class="card"><h2>المساعد الذكي</h2><p class="mut">يستخدم المفتاح الذي حفظته في «الإعدادات». لا يملك بيانات سوق حية، فيعتمد على ما تكتبه له وعلى آخر تحليلاتك المسجلة.</p>
+<div id="cLog"></div>
+<textarea id="cIn" style="direction:rtl;min-height:70px" placeholder="مثال: اشرح لي نتيجة آخر تحليل"></textarea>
+<button class="pri" id="cSend">إرسال</button></div></section>
+<section class="pg" id="about">
+<div class="card" style="text-align:center">
+<svg viewBox="0 0 100 100" width="96" height="96"><rect width="100" height="100" rx="22" fill="#101B2D"/><path d="M30 70V48M50 70V34M70 70V22" stroke="#16A36A" stroke-width="9" stroke-linecap="round"/><path d="M24 78h52" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
+<h2 style="margin-top:8px">تداول بذكاء · Smart Saudi Trading AI</h2>
+<p class="mut" data-t="abD">أداة مجانية لتحليل الأسهم السعودية وإدارة المخاطر.</p>
+<div class="row"><span data-t="dev">المطور</span><b>Adnan Subyani</b></div>
+<div class="row"><span data-t="ph">الجوال</span><b dir="ltr">00966509600071</b></div>
+<div class="row"><span data-t="fs">حجم الخط</span><span><button class="sec" id="fMin">A−</button> <button class="sec" id="fPlus">A+</button></span></div>
+<p class="mut" data-t="disc">المحتوى للمعلومات والتعليم فقط وليس نصيحة استثمارية، ولا يضمن أي ربح.</p></div>
+</section>
+</main>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const St={g(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},s(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const T={ar:{home:'الرئيسية',analysis:'التحليل',calc:'الحاسبة',port:'المحفظة',history:'السجل',chat:'المساعد',ai:'الإعدادات',about:'حول'},
+en:{home:'Home',analysis:'Analysis',calc:'Calculator',port:'Portfolio',history:'History',chat:'Assistant',ai:'Settings',about:'About',
+dataSt:'Data status',noData:'No market data provider is connected. The app never shows invented prices or picks. Live Tadawul data needs a licensed provider. You can still analyze any stock by entering its prices in Analysis.',best:'Best stock candidate today',mkt:'Market overview',val:'Trading value',adv:'Advancing',dec:'Declining',opps:'Potential buy opportunities',hist:'Recorded recommendations',anT:'Analyze a stock from prices you enter',anD:'Paste daily closing prices (oldest to newest, at least 30) separated by commas or lines. Volumes are optional, same order.',sym:'Ticker or name',cl:'Closing prices',vo:'Volumes (optional)',run:'Analyze',calT:'Entry, exit and capital calculator',cap:'Capital (SAR)',rk:'Max risk %',en:'Entry price',sl:'Stop-loss',t1:'Target 1',t2:'Target 2',fee:'Commission % per trade',calc:'Calculate',est:'All calculations are estimates; actual execution prices may differ.',pfT:'My virtual portfolio',qty:'Quantity',bp:'Buy price',cp:'Current price (manual)',add:'Add to portfolio',hT:'Recommendation history',hD:'The log is stored on your device and entries cannot be deleted, so losing results stay visible.',aiT:'AI provider settings',aiD:'Indicators, calculator and portfolio work without a key. The key only enables the AI assistant; some providers charge for usage.',prov:'Provider',save:'Save',show:'Show/hide key',del:'Delete key',aiW:'The key is kept in this browser only and is never sent anywhere. Do not store important keys on a shared device.',abD:'A free tool for Saudi stock analysis and risk management.',dev:'Developer',ph:'Mobile',fs:'Font size',disc:'For information and education only. Not investment advice; no profit is guaranteed.'}};
+let lang=St.g('lang','ar');
+function setLang(){document.documentElement.lang=lang;document.documentElement.dir=lang=='ar'?'rtl':'ltr';$('#bLang').textContent=lang=='ar'?'EN':'ع';
+$$('[data-t]').forEach(e=>{const k=e.dataset.t;if(!e.dataset.ar)e.dataset.ar=e.textContent;e.textContent=lang=='ar'?e.dataset.ar:(T.en[k]||e.dataset.ar)});
+if(!$('#bestBox').dataset.ar)$('#bestBox').dataset.ar=$('#bestBox').textContent;$('#bestBox').textContent=lang=='ar'?$('#bestBox').dataset.ar:'No suitable buying opportunity currently available.';
+buildNav()}
+const pages=['home','analysis','calc','port','history','chat','ai','about'],ic={home:'🏠',analysis:'📈',calc:'🧮',port:'💼',history:'🗂',chat:'🤖',ai:'⚙️',about:'ℹ️'};
+function buildNav(){const cur=(pages.find(p=>$('#'+p).classList.contains('on')))||'home';$('#nav').innerHTML=pages.map(p=>`<button data-p="${p}" class="${p==cur?'on':''}"><b>${ic[p]}</b>${T[lang][p]}</button>`).join('');
+$$('#nav button').forEach(b=>b.onclick=()=>{$$('.pg').forEach(x=>x.classList.toggle('on',x.id==b.dataset.p));buildNav();scrollTo(0,0)})}
+$('#bLang').onclick=()=>{lang=lang=='ar'?'en':'ar';St.s('lang',lang);setLang()};
+$('#bTheme').onclick=()=>{const d=document.documentElement,dark=d.dataset.theme?d.dataset.theme=='dark':matchMedia('(prefers-color-scheme:dark)').matches;d.dataset.theme=dark?'light':'dark';St.s('theme',d.dataset.theme)};
+const th=St.g('theme',null);if(th)document.documentElement.dataset.theme=th;
+let fs=St.g('fs',16);const setFs=()=>{document.documentElement.style.setProperty('--fs',fs+'px');St.s('fs',fs)};setFs();
+$('#fPlus').onclick=()=>{fs=Math.min(22,fs+1);setFs()};$('#fMin').onclick=()=>{fs=Math.max(13,fs-1);setFs()};
+const f=(n,d=2)=>isFinite(n)?Number(n).toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d}):'—';
+const nums=s=>s.split(/[\s,;]+/).map(Number).filter(x=>isFinite(x)&&x>0&&s!=='');
+
+/* indicators */
+const sma=(a,n)=>a.slice(-n).reduce((x,y)=>x+y,0)/Math.min(n,a.length);
+function ema(a,n){const k=2/(n+1);let e=a[0];const o=[e];for(let i=1;i<a.length;i++){e=a[i]*k+e*(1-k);o.push(e)}return o}
+function rsi(a,n=14){let g=0,l=0;for(let i=a.length-n;i<a.length;i++){const d=a[i]-a[i-1];d>0?g+=d:l-=d}return l==0?100:100-100/(1+g/l)}
+function nextTradingDay(d,n){let c=0;const x=new Date(d);while(c<n){x.setDate(x.getDate()+1);const w=x.getDay();if(w!=5&&w!=6)c++}return x}
+$('#aGo').onclick=()=>{
+const c=nums($('#aCl').value),v=nums($('#aVo').value),out=$('#aOut');
+if(c.length<30){out.innerHTML=`<div class="card warn">${lang=='ar'?'أدخل 30 سعر إغلاق على الأقل. لا يمكن حساب المؤشرات بأقل من ذلك.':'Enter at least 30 closing prices; indicators cannot be computed with fewer.'}</div>`;return}
+const last=c.at(-1),s20=sma(c,20),e12=ema(c,12),e26=ema(c,26),macd=e12.map((x,i)=>x-e26[i]),sig=ema(macd,9),R=rsi(c);
+const hi=Math.max(...c.slice(-20)),lo=Math.min(...c.slice(-10)),ch5=(last/c.at(-6)-1)*100;
+let trend=0;if(last>s20)trend+=10;if(e12.at(-1)>e26.at(-1))trend+=8;if(s20>sma(c.slice(0,-5),20))trend+=7;
+let mom=0;if(macd.at(-1)>sig.at(-1))mom+=8;if(R>50&&R<70)mom+=7;else if(R>=70)mom+=3;if(ch5>0)mom+=Math.min(5,ch5);
+let liq=0,liqNote=lang=='ar'?'لا أحجام':'no volume';if(v.length>=21){const r=v.at(-1)/sma(v.slice(0,-1),20);liq=Math.max(0,Math.min(20,r*10));liqNote='×'+f(r)}
+const prevHi=Math.max(...c.slice(-21,-1));let sr=0;if(last>=prevHi)sr+=10;else if(last>=prevHi*0.98)sr+=6;if(last>lo*1.01)sr+=5;
+const entry=last,stop=lo,risk=entry-stop,t1=entry+risk*1.5,t2=entry+risk*2.5,rr=risk>0?(t1-entry)/risk:0;
+let rsk=0;if(risk>0){const rp=risk/entry*100;rsk=rp<3?10:rp<5?7:rp<8?4:1}
+const sc=Math.round(Math.min(100,trend+mom+liq+sr+rsk)),cls=sc>=85?(lang=='ar'?'فرصة قوية تستحق المتابعة':'Strong opportunity'):sc>=70?(lang=='ar'?'فرصة إيجابية':'Positive'):sc>=55?(lang=='ar'?'فرصة متوسطة':'Moderate'):(lang=='ar'?'لا توجد فرصة واضحة':'No clear opportunity');
+const exp=nextTradingDay(new Date(),2),sym=$('#aSym').value.trim()||'—',rows=[['trend',trend,25],['mom',mom,20],['liq',liq,20],['sr',sr,15],['news',0,10],['risk',rsk,10]],nm={trend:['الاتجاه الفني','Trend'],mom:['الزخم','Momentum'],liq:['السيولة','Liquidity'],sr:['الدعم والمقاومة','Support/Resistance'],news:['الأخبار (غير متاحة)','News (n/a)'],risk:['إدارة المخاطر','Risk']};
+const L=lang=='ar'?0:1;
+out.innerHTML=`<div class="card ${sc>=70?'ok':'warn'}"><h2>${esc(sym)} · ${sc}/100</h2><p><span class="tag">${cls}</span></p>
+${rows.map(r=>`<div style="margin:8px 0"><div class="row" style="border:0;padding:0"><span>${nm[r[0]][L]}</span><span>${f(r[1],1)}/${r[2]}</span></div><div class="bar"><i style="width:${r[1]/r[2]*100}%"></i></div></div>`).join('')}</div>
+<div class="card"><div class="row"><span>RSI(14)</span><b>${f(R,1)}</b></div><div class="row"><span>SMA20</span><b>${f(s20)}</b></div><div class="row"><span>MACD / Signal</span><b>${f(macd.at(-1),3)} / ${f(sig.at(-1),3)}</b></div><div class="row"><span>${L?'Volume vs avg':'السيولة مقابل المتوسط'}</span><b>${liqNote}</b></div>
+<div class="row"><span>${L?'Entry (last close)':'الدخول (آخر إغلاق)'}</span><b>${f(entry)}</b></div><div class="row"><span>${L?'Stop-loss (10-day low)':'وقف الخسارة (أدنى 10 جلسات)'}</span><b class="dn">${f(stop)}</b></div><div class="row"><span>${L?'Target 1 / 2':'الهدف 1 / 2'}</span><b class="up">${f(t1)} / ${f(t2)}</b></div><div class="row"><span>${L?'Reward:risk (T1)':'العائد:المخاطرة (هـ1)'}</span><b>${f(rr)}</b></div><div class="row"><span>${L?'Expires (2 sessions)':'تنتهي (جلستا تداول)'}</span><b>${exp.toLocaleDateString('en-GB')}</b></div>
+<p class="mut">${L?'Rule-based estimate from your data only; excludes official holidays, news and fundamentals. Not a guarantee.':'تقدير قائم على قواعد وعلى بياناتك فقط، ولا يشمل الإجازات الرسمية والأخبار والتحليل الأساسي. لا يوجد ضمان.'}</p></div>`;
+if(sc>=70){const h=St.g('hist',[]);h.push({t:Date.now(),sym,sc,entry,stop,t1,t2,exp:exp.getTime(),px:last});St.s('hist',h);renderH()}}
+/* calc */
+$('#cGo').onclick=()=>{const g=i=>parseFloat($(i).value),cap=g('#cCap'),rk=g('#cRisk'),en=g('#cEn'),sl=g('#cSl'),t1=g('#cT1'),t2=g('#cT2'),fee=(g('#cFee')||0)/100,o=$('#cOut');
+if(!(cap>0&&en>0&&sl>0&&en>sl&&rk>0)){o.innerHTML=`<div class="card warn">${lang=='ar'?'أدخل رأس المال والمخاطرة، ويجب أن يكون سعر الدخول أعلى من وقف الخسارة.':'Enter capital and risk; entry must be above the stop-loss.'}</div>`;return}
+let q=Math.floor(cap*rk/100/(en-sl)),mx=Math.floor(cap/(en*(1+fee)));q=Math.min(q,mx);const val=q*en,fees=val*fee*2,loss=q*(en-sl)+fees,p1=t1>0?q*(t1-en)-fees:NaN,p2=t2>0?q*(t2-en)-fees:NaN,rr=t1>0?(t1-en)/(en-sl):NaN;
+const R=(a,b)=>`<div class="row"><span>${a}</span><b>${b}</b></div>`,L=lang=='ar';
+o.innerHTML=`<div class="card">${R(L?'الكمية المقترحة':'Position size',f(q,0))}${R(L?'قيمة الصفقة':'Trade value',f(val)+' SAR')}${R(L?'الخسارة المحتملة':'Potential loss','<span class="dn">'+f(loss)+'</span>')}${R(L?'الربح عند الهدف 1':'Profit at T1','<span class="up">'+f(p1)+'</span>')}${R(L?'الربح عند الهدف 2':'Profit at T2','<span class="up">'+f(p2)+'</span>')}${R(L?'العائد:المخاطرة':'Reward:risk',f(rr))}${R(L?'المتبقي من رأس المال':'Remaining capital',f(cap-val)+' SAR')}</div>`}
+/* portfolio */
+function renderP(){const p=St.g('pf',[]);let cost=0,now=0;const rows=p.map((x,i)=>{const c=x.q*x.b,n=x.q*x.c;cost+=c;now+=n;const d=n-c;return `<div class="card"><div class="row"><b>${esc(x.s)}</b><button class="sec" data-i="${i}">✕</button></div><div class="row"><span>${x.q} × ${f(x.b)} → ${f(x.c)}</span><b class="${d>=0?'up':'dn'}">${f(d)} (${f(d/c*100)}%)</b></div></div>`}).join('');
+$('#pList').innerHTML=(p.length?`<div class="card ok"><div class="row"><span>${lang=='ar'?'إجمالي الربح/الخسارة':'Total P/L'}</span><b class="${now>=cost?'up':'dn'}">${f(now-cost)} (${f((now/cost-1)*100)}%)</b></div></div>`:'')+rows;
+$$('#pList [data-i]').forEach(b=>b.onclick=()=>{p.splice(b.dataset.i,1);St.s('pf',p);renderP()})}
+$('#pAdd').onclick=()=>{const s=$('#pSym').value.trim(),q=parseFloat($('#pQty').value),b=parseFloat($('#pBuy').value),c=parseFloat($('#pCur').value)||b;if(!s||!(q>0)||!(b>0))return;const p=St.g('pf',[]);p.push({s,q,b,c});St.s('pf',p);['#pSym','#pQty','#pBuy','#pCur'].forEach(i=>$(i).value='');renderP()};
+/* history */
+function renderH(){const h=St.g('hist',[]);$('#nHist').textContent=h.length;$('#nOpp').textContent=h.filter(x=>x.exp>Date.now()).length;
+$('#hList').innerHTML=h.slice().reverse().map(x=>`<div class="card"><div class="row"><b>${esc(x.sym)}</b><span class="tag">${x.sc}/100</span></div><div class="row"><span>${new Date(x.t).toLocaleString('en-GB')}</span><span>${f(x.entry)} → ${f(x.t1)} / ${f(x.t2)}</span></div><div class="row"><span>${lang=='ar'?'وقف الخسارة':'Stop'}</span><b class="dn">${f(x.stop)}</b></div></div>`).join('')||`<p class="mut">${lang=='ar'?'لا توجد توصيات بعد. تُسجَّل هنا نتائج التحليل التي تبلغ 70 نقطة فأكثر.':'No recommendations yet. Analyses scoring 70+ are logged here.'}</p>`}
+/* AI settings */
+function renderAI(){const a=St.g('ai',null);if(a){$('#aiP').value=a.p;$('#aiU').value=a.u;$('#aiM').value=a.m;$('#aiK').value=a.k}$('#aiSt').textContent=a&&a.k?(lang=='ar'?'مفتاح محفوظ (مخفي).':'Key saved (masked).'):(lang=='ar'?'لا يوجد مفتاح. المساعد الذكي معطّل.':'No key. AI assistant disabled.')}
+$('#aiS').onclick=()=>{St.s('ai',{p:$('#aiP').value,k:$('#aiK').value,u:$('#aiU').value,m:$('#aiM').value});renderAI()};
+$('#aiSh').onclick=()=>{const k=$('#aiK');k.type=k.type=='password'?'text':'password'};
+$('#aiD2').onclick=()=>{St.s('ai',null);['#aiK','#aiU','#aiM'].forEach(i=>$(i).value='');renderAI()};
+const DEF={OpenAI:['https://api.openai.com/v1','gpt-4o-mini'],DeepSeek:['https://api.deepseek.com','deepseek-chat'],Groq:['https://api.groq.com/openai/v1','llama-3.3-70b-versatile'],OpenRouter:['https://openrouter.ai/api/v1',''],'Google Gemini':['','gemini-2.0-flash'],'Anthropic Claude':['',''],Custom:['','']};
+async function ask(q){const a=St.g('ai',null);if(!a||!a.k)throw new Error('احفظ المفتاح أولًا من تبويب «الإعدادات».');
+const d=DEF[a.p]||['',''],m=a.m||d[1],base=(a.u||d[0]).replace(/\/$/,'');if(!m)throw new Error('اكتب اسم النموذج في الإعدادات.');
+const h=St.g('hist',[]).slice(-3).map(x=>`${x.sym}: score ${x.sc}, entry ${x.entry}, stop ${x.stop}, T1 ${x.t1}, T2 ${x.t2}`).join('\n');
+const sys='أنت مساعد لتحليل الأسهم السعودية. لا تملك بيانات سوق حية ولا تختلق أسعارًا أو أخبارًا. ميّز بين الحقائق والتوقعات، واذكر المخاطر، وذكّر أن هذا ليس نصيحة استثمارية. آخر تحليلات المستخدم:\n'+(h||'لا يوجد');
+let r,j;
+if(a.p=='Google Gemini'){r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${encodeURIComponent(a.k)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({systemInstruction:{parts:[{text:sys}]},contents:[{role:'user',parts:[{text:q}]}]})});j=await r.json();if(!r.ok)throw new Error(j.error?.message||r.status);return j.candidates[0].content.parts.map(x=>x.text).join('')}
+if(a.p=='Anthropic Claude'){r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':a.k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:m,max_tokens:1000,system:sys,messages:[{role:'user',content:q}]})});j=await r.json();if(!r.ok)throw new Error(j.error?.message||r.status);return j.content.map(x=>x.text||'').join('')}
+if(!base)throw new Error('اكتب Base URL في الإعدادات.');
+r=await fetch(base+'/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+a.k},body:JSON.stringify({model:m,messages:[{role:'system',content:sys},{role:'user',content:q}]})});j=await r.json();if(!r.ok)throw new Error(j.error?.message||r.status);return j.choices[0].message.content}
+$('#cSend').onclick=async()=>{const q=$('#cIn').value.trim();if(!q)return;const L=$('#cLog'),b=$('#cSend');
+L.insertAdjacentHTML('beforeend',`<div class="card"><b>أنت:</b> ${esc(q)}</div>`);$('#cIn').value='';b.disabled=true;b.textContent='جارٍ الإرسال...';
+let out;try{out=await ask(q)}catch(e){out='تعذّر الاتصال: '+e.message}
+L.insertAdjacentHTML('beforeend',`<div class="card ok" style="white-space:pre-wrap">${esc(out)}</div>`);b.disabled=false;b.textContent='إرسال'};
+setLang();renderP();renderH();renderAI();
+</script>
+</body>
+</html>
